@@ -105,7 +105,7 @@ jobs:
       - name: Download Terraform Plan
         uses: actions/download-artifact@v4
         with:
-          name: tfplan
+          name: terraform-plan
           path: ./
       - name: Terraform Init
         run: terraform init
