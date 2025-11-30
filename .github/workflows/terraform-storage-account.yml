@@ -36,41 +36,16 @@ jobs:
             --name taskboardstoragedavid \
             --account-name taskboardsadavidnakov
 
-      - name: Export variables to GITHUB_ENV
+      - name: Save backend config
         run: |
-          echo "TF_BACKEND_RG=StorageRG" >> $GITHUB_ENV
-          echo "TF_BACKEND_SA=taskboardsadavidnakov" >> $GITHUB_ENV
-          echo "TF_BACKEND_CONTAINER=taskboardstoragedavid" >> $GITHUB_ENV
+          echo "TF_BACKEND_RG=StorageRG" >> backend.txt
+          echo "TF_BACKEND_SA=taskboardsadavidnakov" >> backend.txt
+          echo "TF_BACKEND_CONTAINER=taskboardstoragedavid" >> backend.txt
 
-      - name: Upload Variables to GitHub
-        uses: actions/github-script@v7
-        env:
-          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
         with:
-          github-token: ${{ secrets.ADMIN_TOKEN }}
-          script: |
-            const vars = {
-              TF_BACKEND_RG: process.env.TF_BACKEND_RG,
-              TF_BACKEND_SA: process.env.TF_BACKEND_SA,
-              TF_BACKEND_CONTAINER: process.env.TF_BACKEND_CONTAINER
-            };
+          name: backend-config
+          path: backend.txt
 
-            for (const [name, value] of Object.entries(vars)) {
-              const res = await fetch(
-                `https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/variables`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Authorization": `Bearer ${process.env.ADMIN_TOKEN}`,
-                    "Accept": "application/vnd.github+json",
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({ name, value })
-                }
-              );
 
-              if (!res.ok) {
-                const text = await res.text();
-                throw new Error(`Failed to create variable ${name}: ${res.status} ${text}`);
-              }
-            }
