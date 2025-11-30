@@ -10,6 +10,7 @@ permissions:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Azure Login
         uses: azure/login@v2
@@ -47,13 +48,13 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            await github.rest.actions.createOrUpdateRepoVariable({
+            await github.rest.actions.createRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_RG",
               value: process.env.TF_BACKEND_RG
             })
-            await github.rest.actions.createOrUpdateRepoVariable({
+            await github.rest.actions.createRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_SA",
