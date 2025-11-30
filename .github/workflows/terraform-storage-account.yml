@@ -47,19 +47,19 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            await github.rest.actions.updateRepoVariable({
+            await github.rest.actions.createOrUpdateRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_RG",
               value: process.env.TF_BACKEND_RG
             })
-            await github.rest.actions.updateRepoVariable({
+            await github.rest.actions.createOrUpdateRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_SA",
               value: process.env.TF_BACKEND_SA
             })
-            await github.rest.actions.updateRepoVariable({
+            await github.rest.actions.createOrUpdateRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_CONTAINER",
