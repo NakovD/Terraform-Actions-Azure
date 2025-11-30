@@ -36,11 +36,14 @@ jobs:
         run: terraform -chdir=bootstrap apply -auto-approve
 
       - name: Save backend values
-        id: out
+        id: backend
+        shell: bash
         run: |
-          echo "RG=$(terraform -chdir=bootstrap output -raw resource_group_name)" >> $GITHUB_OUTPUT
-          echo "SA=$(terraform -chdir=bootstrap output -raw storage_account_name)" >> $GITHUB_OUTPUT
-          echo "CT=$(terraform -chdir=bootstrap output -raw container_name)" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          echo "RG=$(terraform -chdir=bootstrap output -raw resource_group_name | tr -d '\r')" >> $GITHUB_OUTPUT
+          echo "SA=$(terraform -chdir=bootstrap output -raw storage_account_name | tr -d '\r')" >> $GITHUB_OUTPUT
+          echo "CT=$(terraform -chdir=bootstrap output -raw container_name | tr -d '\r')" >> $GITHUB_OUTPUT
+
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
