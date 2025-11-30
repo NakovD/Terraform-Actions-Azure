@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "tfstate" {
-  name     = "rg-tfstate"
-  location = "westeurope"
+  name     = "StorageRG"
+  location = "Italy North"
 }
 
 resource "random_id" "suffix" {
@@ -8,7 +8,7 @@ resource "random_id" "suffix" {
 }
 
 resource "azurerm_storage_account" "tfstate" {
-  name                     = "tfstate${random_id.suffix.hex}"
+  name                     = "taskboardstorage${random_id.suffix.hex}"
   resource_group_name      = azurerm_resource_group.tfstate.name
   location                 = azurerm_resource_group.tfstate.location
   account_tier             = "Standard"
@@ -16,7 +16,7 @@ resource "azurerm_storage_account" "tfstate" {
 }
 
 resource "azurerm_storage_container" "tfstate" {
-  name                  = "tfstate"
+  name                  = "taskboardcontainer"
   storage_account_name  = azurerm_storage_account.tfstate.name
   container_access_type = "private"
 }
