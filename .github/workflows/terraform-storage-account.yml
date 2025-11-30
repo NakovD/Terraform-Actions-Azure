@@ -21,7 +21,7 @@ jobs:
       - name: Create Storage Account
         run: |
           az storage account create \
-            --name taskboardstorageaccountdavidnakov \
+            --name taskboardsadavidnakov \
             --resource-group StorageRG \
             --location italynorth \
             --sku Standard_LRS \
@@ -30,13 +30,13 @@ jobs:
       - name: Create Blob Container
         run: |
           az storage container create \
-            --name taskboardstoragedavidnakov \
-            --account-name taskboardstorageaccountdavidnakov
+            --name taskboardstoragedavid \
+            --account-name taskboardsadavidnakov
 
       - name: Save Outputs as GitHub Variables
         run: |
           echo "TF_BACKEND_RG=StorageRG" >> $GITHUB_ENV
-          echo "TF_BACKEND_SA=taskboardstorageaccountdavidnakov" >> $GITHUB_ENV
+          echo "TF_BACKEND_SA=taskboardstoragedavid" >> $GITHUB_ENV
           echo "TF_BACKEND_CONTAINER=taskboardstoragedavidnakov" >> $GITHUB_ENV
 
       - name: Upload Variables to GitHub
