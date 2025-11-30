@@ -50,6 +50,7 @@ jobs:
       - name: Upload Variables to GitHub
         uses: actions/github-script@v8
         with:
+          github-token: ${{ secrets.ADMIN_TOKEN }}
           script: |
             await github.rest.actions.createRepoVariable({
               owner: context.repo.owner,
