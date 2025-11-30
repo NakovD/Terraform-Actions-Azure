@@ -3,6 +3,10 @@ name: Bootstrap Terraform Backend
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: write
+
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
