@@ -10,7 +10,10 @@ permissions:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     steps:
       - name: Azure Login
         uses: azure/login@v2
@@ -60,7 +63,7 @@ jobs:
               name: "TF_BACKEND_SA",
               value: process.env.TF_BACKEND_SA
             })
-            await github.rest.actions.createOrUpdateRepoVariable({
+            await github.rest.actions.createRepoVariable({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "TF_BACKEND_CONTAINER",
