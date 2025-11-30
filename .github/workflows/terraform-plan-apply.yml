@@ -15,40 +15,6 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 jobs:
-  bootstrap:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      - name: Terraform Init
-        run: terraform -chdir=bootstrap init
-
-      - name: Terraform Apply
-        run: terraform -chdir=bootstrap apply -auto-approve
-
-      - name: Save backend values
-        id: backend
-        shell: bash
-        run: |
-          set -euo pipefail
-          RG=$(terraform -chdir=bootstrap output -raw resource_group_name)
-          SA=$(terraform -chdir=bootstrap output -raw storage_account_name)
-          CT=$(terraform -chdir=bootstrap output -raw container_name)
-
-          echo "RG=$RG" >> $GITHUB_OUTPUT
-          echo "SA=$SA" >> $GITHUB_OUTPUT
-          echo "CT=$CT" >> $GITHUB_OUTPUT
-
-
 
   terraform-plan:
     name: 'Terraform Plan'

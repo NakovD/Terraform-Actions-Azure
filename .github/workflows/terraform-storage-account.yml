@@ -1,0 +1,62 @@
+name: Bootstrap Terraform Backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Resource Group
+        run: |
+          az group create \
+            --name tf-backend-rg \
+            --location westeurope
+
+      - name: Create Storage Account
+        run: |
+          az storage account create \
+            --name tfbackend${{ github.run_id }} \
+            --resource-group tf-backend-rg \
+            --sku Standard_LRS \
+            --encryption-services blob
+
+      - name: Create Blob Container
+        run: |
+          az storage container create \
+            --name tfstate \
+            --account-name tfbackend${{ github.run_id }}
+
+      - name: Save Outputs as GitHub Variables
+        run: |
+          echo "TF_BACKEND_RG=tf-backend-rg" >> $GITHUB_ENV
+          echo "TF_BACKEND_SA=tfbackend${{ github.run_id }}" >> $GITHUB_ENV
+          echo "TF_BACKEND_CONTAINER=tfstate" >> $GITHUB_ENV
+
+      - name: Upload Variables to GitHub
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.updateRepoVariable({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "TF_BACKEND_RG",
+              value: process.env.TF_BACKEND_RG
+            })
+            await github.rest.actions.updateRepoVariable({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "TF_BACKEND_SA",
+              value: process.env.TF_BACKEND_SA
+            })
+            await github.rest.actions.updateRepoVariable({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "TF_BACKEND_CONTAINER",
+              value: process.env.TF_BACKEND_CONTAINER
+            })
