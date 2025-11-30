@@ -40,9 +40,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "RG=$(terraform -chdir=bootstrap output -raw resource_group_name | tr -d '\r')" >> $GITHUB_OUTPUT
-          echo "SA=$(terraform -chdir=bootstrap output -raw storage_account_name | tr -d '\r')" >> $GITHUB_OUTPUT
-          echo "CT=$(terraform -chdir=bootstrap output -raw container_name | tr -d '\r')" >> $GITHUB_OUTPUT
+          RG=$(terraform -chdir=bootstrap output -json | jq -r '.resource_group_name.value')
+          SA=$(terraform -chdir=bootstrap output -json | jq -r '.storage_account_name.value')
+          CT=$(terraform -chdir=bootstrap output -json | jq -r '.container_name.value')
+          echo "RG=$RG" >> $GITHUB_OUTPUT
+          echo "SA=$SA" >> $GITHUB_OUTPUT
+          echo "CT=$CT" >> $GITHUB_OUTPUT
+
 
   terraform-plan:
     name: 'Terraform Plan'
