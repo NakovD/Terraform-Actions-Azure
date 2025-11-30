@@ -86,7 +86,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-config
-          path: ./backend
+          path: backend.txt
 
       - name: Load backend variables
         run: |
