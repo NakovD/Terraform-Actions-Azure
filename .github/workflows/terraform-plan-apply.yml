@@ -71,13 +71,6 @@ jobs:
         with:
           name: terraform-plan
           path: ./
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-config
-          path: backend.txt
-
-
 
       - name: Terraform Init
         run: |
