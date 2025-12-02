@@ -35,17 +35,3 @@ jobs:
           az storage container create \
             --name taskboardstoragedavid \
             --account-name taskboardsadavidnakov
-
-      - name: Save backend config
-        run: |
-          echo "TF_BACKEND_RG=StorageRG" >> backend.txt
-          echo "TF_BACKEND_SA=taskboardsadavidnakov" >> backend.txt
-          echo "TF_BACKEND_CONTAINER=taskboardstoragedavid" >> backend.txt
-
-      - name: Upload backend artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-config
-          path: backend.txt
-
-
