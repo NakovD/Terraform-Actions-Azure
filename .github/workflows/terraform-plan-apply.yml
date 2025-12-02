@@ -35,12 +35,6 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-config      
-          path: ./backend           
-
       - name: Terraform Init
         run: |
           terraform init 
