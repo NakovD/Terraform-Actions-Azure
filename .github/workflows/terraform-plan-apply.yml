@@ -41,20 +41,9 @@ jobs:
           name: backend-config      
           path: ./backend           
 
-      - name: Load backend variables
-        run: |
-          set -a
-          source ./backend/backend.txt
-          set +a
-
       - name: Terraform Init
         run: |
-          terraform init \
-          -backend-config="resource_group_name=$TF_BACKEND_RG" \
-          -backend-config="storage_account_name=$TF_BACKEND_SA" \
-          -backend-config="container_name=$TF_BACKEND_CONTAINER" \
-          -backend-config="key=terraform.tfstate"
-
+          terraform init 
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
@@ -74,6 +63,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -89,18 +83,10 @@ jobs:
           name: backend-config
           path: backend.txt
 
-      - name: Load backend variables
-        run: |
-            set -a
-            source ./backend/backend.txt
-            set +a
 
-      - name: Terraform Init (only backend)
+
+      - name: Terraform Init
         run: |
-          terraform init \
-          -backend-config="resource_group_name=$TF_BACKEND_RG" \
-          -backend-config="storage_account_name=$TF_BACKEND_SA" \
-          -backend-config="container_name=$TF_BACKEND_CONTAINER" \
-          -backend-config="key=terraform.tfstate"          
+          terraform init 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
